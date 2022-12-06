@@ -15,4 +15,11 @@ RSpec.describe Ship do
         expect(cruiser.length).to eq (3)
         expect(cruiser.health).to eq (3)
     end
+
+    it '3. is sunk?' do
+        cruiser = Ship.new('cruiser', 3)
+
+        expect(cruiser).to be_an_instance_of(Ship)
+        expect(cruiser.sunk?).to eq(false)
+    end
 end
