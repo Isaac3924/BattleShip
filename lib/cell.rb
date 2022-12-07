@@ -32,7 +32,7 @@ class Cell
     def fire_upon #switches the fire variable to true. if empty? is false, then decreases ship.health by 1
         @fire = true
         if empty? == false
-            ship.health -= 1
+            ship.hit
         end
     end
 
