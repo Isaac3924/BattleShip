@@ -31,22 +31,22 @@ class Cell
 
     def fire_upon #switches the fire variable to true. if empty? is false, then decreases ship.health by 1
         @fire = true
-        #if empty? == false
-        #    ship.health -= 1
-        #end
+        if empty? == false
+            ship.health -= 1
+        end
     end
 
-    def render
+    def render #sets up cell image for board depending on whether the cell was fired at, has a ship, and whether that ship has sunk.
         if fired_upon? == false
             return "."
         elsif fired_upon? == true && empty? == true
             return "M"
-        elsif fired_upon? == true && empty? == false
+        elsif fired_upon? == true && empty? == false && ship.sunk? == false
             return "H"
-        elsif fired_upon? == true && empty? == false
-            4
+        elsif fired_upon? == true && empty? == false && ship.sunk? == true
+            return "X"
         else
-            5
+            return "?"
         end
     end
 end
