@@ -1,5 +1,6 @@
 require 'rspec'
 require './lib/ship'
+require './lib/cell'
 
 RSpec.describe Ship do
     it '1. exists' do
