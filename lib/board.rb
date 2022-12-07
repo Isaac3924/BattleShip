@@ -34,4 +34,25 @@ class Board
         @cells_hash.keys.include?(coordinate)
     end
 
+    def valid_placement?(ship, coord_array)
+        letter_value = 0
+        coord_array.each do |coord_element|
+            coord_element.chars
+            #require "pry"; binding.pry
+
+            if coord_element.chars[0].ord >= 69
+                require "pry"; binding.pry
+                p "IT BROKE"
+                return false
+            elsif coord_element.chars.length > 2 || coord_element.chars[1].to_i < 0 || coord_element.chars[1].to_i > 5
+                # require "pry"; binding.pry
+                p "IT BROKE"
+                return false
+            else
+                p "IT WORK"
+                require "pry"; binding.pry
+                return true
+            end
+        end
+    end
 end
