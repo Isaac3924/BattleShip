@@ -3,11 +3,14 @@ require './lib/ship'
 require './lib/cell'
 
 class Board
-    attr_reader :cells
+    attr_reader :cells_hash
 
     def initialize
-        @cells = Hash.new(0)
-        @cells = {
+        @cells_hash = Hash.new(0)
+    end
+
+    def cells
+        @cells_hash = {
             "A1" => Cell.new("A1"),
             "A2" => Cell.new("A2"),
             "A3" => Cell.new("A3"),
@@ -25,6 +28,10 @@ class Board
             "D3" => Cell.new("D3"),
             "D4" => Cell.new("D4")
         }
+    end
+
+    def valid_coordinate?(coordinate)
+        @cells_hash.keys.include?(coordinate)
     end
 
 end
