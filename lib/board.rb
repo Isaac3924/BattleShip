@@ -35,23 +35,62 @@ class Board
     end
 
     def valid_placement?(ship, coord_array)
-        letter_value = 0
+        number_check = []
+        letter_check = []
         coord_array.each do |coord_element|
             coord_element.chars
-            #require "pry"; binding.pry
+            if coord_element.chars.length == 2
+               number_check << coord_element.chars[1]
+            end
+
+        end
+        coord_array.each do |coord_element|
+            coord_element.chars
+            if coord_element.chars.length == 2
+               letter_check << coord_element.chars[0]
+            end
+
+        end
+        coord_array.each do |coord_element|
+            coord_element.chars
 
             if coord_element.chars[0].ord >= 69
-                require "pry"; binding.pry
-                p "IT BROKE"
+                require 'pry'; binding.pry
+                return false 
+            elsif coord_element.chars[1].to_i < 0 || coord_element.chars[1].to_i > 5
+                require 'pry'; binding.pry
                 return false
-            elsif coord_element.chars.length > 2 || coord_element.chars[1].to_i < 0 || coord_element.chars[1].to_i > 5
-                # require "pry"; binding.pry
-                p "IT BROKE"
+            elsif coord_element.chars.length != ship.length 
+                require 'pry'; binding.pry
+                return false
+            elsif coord_array.length != ship.length 
+                require 'pry'; binding.pry
+                return false
+            elsif number_check.one? == false
+                if letter_check.one? == false
+                    ship.length.times do |i|
+                        if (letter_check[i + 1].ord - letter_check[i].ord) == 1
+                            require 'pry'; binding.pry
+                            return true
+                            break
+                        else
+                            require 'pry'; binding.pry
+                            return false
+                        end
+                    end
+                end
+                require 'pry'; binding.pry
+                return false 
+            elsif number_check.last > number_check.first
+                require 'pry'; binding.pry
+                return false
+            elsif letter_check.first.ord > letter_check.last.ord
+                require 'pry'; binding.pry
                 return false
             else
-                p "IT WORK"
-                require "pry"; binding.pry
+                require 'pry'; binding.pry
                 return true
+                
             end
         end
     end
