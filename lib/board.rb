@@ -40,7 +40,7 @@ class Board
         coord_array.each do |coord_element|
             coord_element.chars
             if coord_element.chars.length == 2
-               number_check << coord_element.chars[1]
+               number_check << coord_element.chars[1].to_i
             end
 
         end
@@ -53,42 +53,47 @@ class Board
         end
         coord_array.each do |coord_element|
             coord_element.chars
+            
+            ship.length.times do |i|
+                if (number_check[i + 1].to_i - number_check[i].to_i) != 1 && letter_check[i] == letter_check[i + 1]
+                     # require 'pry'; binding.pry
+                    return false
+                    break
+                end
+            end
+
+            ship.length.times do |i|
+                if  letter_check[i + 1] == nil
+                    # require 'pry'; binding.pry
+                    break
+                elsif (letter_check[i + 1].ord - letter_check[i].ord) != 1 
+                     # require 'pry'; binding.pry
+                    return false
+                    break
+                end
+            end
 
             if coord_element.chars[0].ord >= 69
-                require 'pry'; binding.pry
+                  # require 'pry'; binding.pry
                 return false 
             elsif coord_element.chars[1].to_i < 0 || coord_element.chars[1].to_i > 5
-                require 'pry'; binding.pry
+                  # require 'pry'; binding.pry
                 return false
-            elsif coord_element.chars.length != ship.length 
-                require 'pry'; binding.pry
-                return false
+            # elsif coord_element.chars.length != ship.length 
+            #       # require 'pry'; binding.pry
+            #     return false
             elsif coord_array.length != ship.length 
-                require 'pry'; binding.pry
+                  # require 'pry'; binding.pry
                 return false
-            elsif number_check.one? == false
-                if letter_check.one? == false
-                    ship.length.times do |i|
-                        if (letter_check[i + 1].ord - letter_check[i].ord) == 1
-                            require 'pry'; binding.pry
-                            return true
-                            break
-                        else
-                            require 'pry'; binding.pry
-                            return false
-                        end
-                    end
-                end
-                require 'pry'; binding.pry
-                return false 
+             
             elsif number_check.last > number_check.first
-                require 'pry'; binding.pry
+                  # require 'pry'; binding.pry
                 return false
             elsif letter_check.first.ord > letter_check.last.ord
-                require 'pry'; binding.pry
+                  # require 'pry'; binding.pry
                 return false
             else
-                require 'pry'; binding.pry
+                  # require 'pry'; binding.pry
                 return true
                 
             end
