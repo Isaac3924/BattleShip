@@ -55,45 +55,40 @@ class Board
             coord_element.chars
             
             ship.length.times do |i|
-                if (number_check[i + 1].to_i - number_check[i].to_i) != 1 && letter_check[i] == letter_check[i + 1]
-                     # require 'pry'; binding.pry
+                if  number_check[i + 1] == nil
+                    #require 'pry'; binding.pry
+                        break
+                elsif  letter_check[i + 1] == nil
+                #require 'pry'; binding.pry
+                    break
+                elsif (number_check[i + 1] - number_check[i]) != 1 && letter_check[i] == letter_check[i + 1]
+                    #require 'pry'; binding.pry
                     return false
-                    break
-                end
-            end
-
-            ship.length.times do |i|
-                if  letter_check[i + 1] == nil
-                    # require 'pry'; binding.pry
-                    break
-                elsif (letter_check[i + 1].ord - letter_check[i].ord) != 1 
-                     # require 'pry'; binding.pry
+                elsif (number_check[i + 1] - number_check[i]) != 1 && letter_check[i + 1].ord - letter_check[i].ord != 1
+                    #require 'pry'; binding.pry
                     return false
-                    break
+                elsif (letter_check[i + 1].ord - letter_check[i].ord) != 1 && (number_check[i + 1] - number_check[i]) != 1
+                    #require 'pry'; binding.pry
+                    return false
+                elsif (letter_check[i + 1].ord - letter_check[i].ord) == 1 && (number_check[i + 1] - number_check[i]) == 1
+                    return false
                 end
             end
 
             if coord_element.chars[0].ord >= 69
-                  # require 'pry'; binding.pry
+                #require 'pry'; binding.pry
                 return false 
             elsif coord_element.chars[1].to_i < 0 || coord_element.chars[1].to_i > 5
-                  # require 'pry'; binding.pry
+                #require 'pry'; binding.pry
                 return false
-            # elsif coord_element.chars.length != ship.length 
-            #       # require 'pry'; binding.pry
-            #     return false
             elsif coord_array.length != ship.length 
-                  # require 'pry'; binding.pry
-                return false
-             
-            elsif number_check.last > number_check.first
-                  # require 'pry'; binding.pry
+                #require 'pry'; binding.pry
                 return false
             elsif letter_check.first.ord > letter_check.last.ord
-                  # require 'pry'; binding.pry
+                #require 'pry'; binding.pry
                 return false
             else
-                  # require 'pry'; binding.pry
+                #require 'pry'; binding.pry
                 return true
                 
             end
