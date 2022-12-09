@@ -5,11 +5,11 @@ require './lib/cell'
 class Board
     attr_reader :cells_hash
 
-    def initialize
+    def initialize #The board starts with a attribute cells_hash as a new empty Hash.
         @cells_hash = Hash.new(0)
     end
 
-    def cells
+    def cells #The cells method sets the attribute cells_hash to be has of A1-D4 of instances of Cells that have a String as the coordinate attribute and nil for ship.
         @cells_hash = {
             "A1" => Cell.new("A1"),
             "A2" => Cell.new("A2"),
@@ -30,69 +30,62 @@ class Board
         }
     end
 
-    def valid_coordinate?(coordinate)
+    def valid_coordinate?(coordinate) #The method looks through an array of Hash keys, Strings of A1-D4, and will return true if that array contains the coordinate argument.
         @cells_hash.keys.include?(coordinate)
     end
 
-    def valid_placement?(ship, coord_array)
+    def valid_placement?(ship, coord_array) #The method takes a instance of Ship, and an array of TWO CHARACTER Strings.
         number_check = []
         letter_check = []
-        coord_array.each do |coord_element|
-            coord_element.chars
-            if coord_element.chars.length == 2
-               number_check << coord_element.chars[1].to_i
-            end
 
+        if coord_array.length != ship.length 
+            return false
         end
-        coord_array.each do |coord_element|
-            coord_element.chars
-            if coord_element.chars.length == 2
-               letter_check << coord_element.chars[0]
+
+        coord_array.each do |coord_element| #["A1", "A2"].each do |"A1" (THEN) "A2" (ETC)|
+            #require "pry"; binding.pry
+            if valid_coordinate?(coord_element) == false
+                return false
             end
 
-        end
-        coord_array.each do |coord_element|
-            coord_element.chars
-            
-            ship.length.times do |i|
-                if  number_check[i + 1] == nil
-                    #require 'pry'; binding.pry
-                        break
-                elsif  letter_check[i + 1] == nil
-                #require 'pry'; binding.pry
-                    break
-                elsif (number_check[i + 1] - number_check[i]) != 1 && letter_check[i] == letter_check[i + 1]
-                    #require 'pry'; binding.pry
-                    return false
-                elsif (number_check[i + 1] - number_check[i]) != 1 && letter_check[i + 1].ord - letter_check[i].ord != 1
-                    #require 'pry'; binding.pry
-                    return false
-                elsif (letter_check[i + 1].ord - letter_check[i].ord) != 1 && (number_check[i + 1] - number_check[i]) != 1
-                    #require 'pry'; binding.pry
-                    return false
-                elsif (letter_check[i + 1].ord - letter_check[i].ord) == 1 && (number_check[i + 1] - number_check[i]) == 1
-                    return false
-                end
-            end
-
-            if coord_element.chars[0].ord >= 69
-                #require 'pry'; binding.pry
-                return false 
-            elsif coord_element.chars[1].to_i < 0 || coord_element.chars[1].to_i > 5
-                #require 'pry'; binding.pry
-                return false
-            elsif coord_array.length != ship.length 
-                #require 'pry'; binding.pry
-                return false
-            elsif letter_check.first.ord > letter_check.last.ord
-                #require 'pry'; binding.pry
-                return false
+            # coord_element.chars ["A", "1"] THEN ["A", "2"]
+            if coord_element.chars.length == 2 #Is ther onely two elements in ["A", "1"]?
+                letter_check << coord_element.chars[0]
+                number_check << coord_element.chars[1].to_i #["A", "1"](1) = "1".to_i Changes the "1" String to an int of 1. And then pushes it into the Number Check Array.
             else
+                return false
+            end
+
+        end
+
+        #Example used Line 40 of board_spec:
+        ship.length.times do |index_loc| #(cruiser.length == 3).times do |index_loc == 0 (FIRST, THEN GOES UP BY ONE IF IT REACHES THE END AND LOOPS AGAIN UNTIL IT REACHES 3)|
+            if letter_check[index_loc].ord >= 69 
+                return false
+            elsif number_check[index_loc] < 0 || number_check [index_loc]> 5
                 #require 'pry'; binding.pry
-                return true
-                
+                return false
+            elsif  number_check[index_loc + 1] == nil #Logic to catch the error of comparing a nil value.
+                #require 'pry'; binding.pry
+                break
+            elsif  letter_check[index_loc + 1] == nil #Logic to catch the error of comparing a nil value.
+                #require 'pry'; binding.pry
+                break
+            elsif (number_check[index_loc + 1] - number_check[index_loc]) != 1 && letter_check[index_loc] == letter_check[index_loc + 1] #(number_check[0+1..1+1 (index_loc never == 2 due to the above logice breakinbg the loop beforehand.)] == 1 - number_check[index_loc == 0..2] == 0) == 2 - 1 == 1 Which means this won't run.
+                #require 'pry'; binding.pry
+                return false #Moving forwards, though, to index_loc == 1, we will arive here. (number_check[2]) - (number_check[1]) == (4) - (2) == 2 WHICH DOESN'T EQUAL 1, BUT WE HAVE && (letter_check[1] == letter_check[1 + 1]) == (A == A) IT PASSES RETURNING FALSE
+            elsif (number_check[index_loc + 1] - number_check[index_loc]) != 1 && letter_check[index_loc + 1].ord - letter_check[index_loc].ord != 1
+                #require 'pry'; binding.pry
+                return false
+            elsif (letter_check[index_loc + 1].ord - letter_check[index_loc].ord) != 1 && (number_check[index_loc + 1] - number_check[index_loc]) != 1
+                #require 'pry'; binding.pry
+                return false
+            elsif (letter_check[index_loc+ 1].ord - letter_check[index_loc].ord) == 1 && (number_check[index_loc + 1] - number_check[index_loc]) == 1
+                return false
             end
         end
+
+        return true
     end
 
     def place(ship, cells)
