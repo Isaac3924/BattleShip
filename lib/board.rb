@@ -94,4 +94,15 @@ class Board
             end
         end
     end
+
+    def place(ship, cells)
+        if valid_placement?(ship, cells)
+            ship.length.times do |i|
+                if valid_coordinate?(cells[i])
+                    # require 'pry'; binding.pry
+                    cells_hash[cells[i]].place_ship(ship)
+                end
+            end
+        end
+    end
 end

@@ -18,6 +18,7 @@ class Cell
     end
 
     def place_ship(ship) #will assign the given argument (meant to be an instance of Ship class) to the ship value
+        require 'pry'; binding.pry
         @ship = ship
     end
 
