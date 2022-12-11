@@ -22,7 +22,7 @@ RSpec.describe Cell do
         expect(cell.empty?).to eq(true)
     end
 
-    it "can see the cell is empty" do
+    it "can see the cell has a ship" do
         cell = Cell.new("B4") 
         cruiser = Ship.new("Cruiser", 3)
   
@@ -51,7 +51,10 @@ RSpec.describe Cell do
 
         expect(cell_1.render).to eq(".")
 
+        #require "pry"; binding.pry
+
         cell_1.fire_upon
+        #require 'pry'; binding.pry
 
         expect(cell_1.render).to eq("M")
 

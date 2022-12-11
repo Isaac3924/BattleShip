@@ -6,11 +6,12 @@ class Cell
 
     def initialize(coordinate) #initializes with string of coordinate
         @coordinate = coordinate
-        fire = false
+        @ship = nil
+        @fire = false
     end
 
     def empty? #if the ship value still isn't assigned, this will be true, meaning no ship at that coordinate
-        if ship != nil
+        if ship.instance_of? Ship
             return false
         else
             return true
@@ -18,6 +19,7 @@ class Cell
     end
 
     def place_ship(ship) #will assign the given argument (meant to be an instance of Ship class) to the ship value
+        #require 'pry'; binding.pry
         @ship = ship
     end
 
@@ -25,6 +27,7 @@ class Cell
         if @fire == true
             return true
         else
+            #require 'pry'; binding.pry
             return false
         end
     end
