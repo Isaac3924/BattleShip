@@ -33,4 +33,11 @@ RSpec.describe Game do
 
         expect(game.computer_board.valid_placement?(game.computer_cruiser, game.computer_cruiser_coords)).to eq true
     end
+
+    it "is a valid placement for computer's submarine" do
+        game = Game.new
+        game.setup
+
+        expect(game.computer_board.valid_placement?(game.computer_sub, game.computer_sub_coords)).to eq true
+    end
 end

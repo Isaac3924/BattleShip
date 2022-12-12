@@ -88,6 +88,10 @@ class Board
             if letter_check[1] != letter_check[2] && letter_check[0] == letter_check[2]
                 return false
             end
+        elsif ship.length == 2
+            if letter_check[0] != letter_check[1] && number_check[0] != number_check[1]
+                return false
+            end
         end
 
         #Example used Line 40 of board_spec:
