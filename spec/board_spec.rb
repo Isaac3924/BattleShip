@@ -44,6 +44,11 @@ RSpec.describe Board do
         expect(board.valid_placement?(cruiser, ["B1", "C1", "D1"])).to eq(true)
         expect(board.valid_placement?(cruiser, ["C1", "D1", "E1"])).to eq(false)
         expect(board.valid_placement?(cruiser, ["A3", "A4", "A5"])).to eq(false)
+        expect(board.valid_placement?(cruiser, ["B1", "B2", "C1"])).to eq(false)
+        expect(board.valid_placement?(cruiser, ["C3", "D1", "C2"])).to eq(false)
+        expect(board.valid_placement?(cruiser, ["B3", "C3", "D2"])).to eq(false)
+        expect(board.valid_placement?(cruiser, ["C2", "C3", "D3"])).to eq(false)
+        expect(board.valid_placement?(cruiser, ["A1", "B1", "A2"])).to eq(false)
     end
     
     it "can place ships" do

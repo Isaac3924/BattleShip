@@ -63,11 +63,38 @@ class Board
 
         end
 
+        if ship.length == 3
+            if letter_check[0] == letter_check[1] && letter_check[0] != letter_check[2]
+                if number_check[0] == number_check[1] || number_check[0] == number_check[2]
+                    return false
+                
+                end
+            elsif letter_check[0] != letter_check[1] && letter_check[0] != letter_check[2]
+                if number_check[0] != number_check[1] || number_check[0] != number_check[2]
+                    return false
+                end
+            end
+
+            if letter_check[0] != letter_check[1]
+                if number_check[0] != number_check[1] && number_check[0] != number_check[2]
+                    return false
+                end
+            elsif letter_check[0] != letter_check [2]
+                if number_check[0] != number_check[1] && number_check[0] != number_check[2]
+                    return false
+                end
+            end
+
+            if letter_check[1] != letter_check[2] && letter_check[0] == letter_check[2]
+                return false
+            end
+        end
+
         #Example used Line 40 of board_spec:
         ship.length.times do |index_loc| #(cruiser.length == 3).times do |index_loc == 0 (FIRST, THEN GOES UP BY ONE IF IT REACHES THE END AND LOOPS AGAIN UNTIL IT REACHES 3)|
             if letter_check[index_loc].ord >= 69 
                 return false
-            elsif number_check[index_loc] < 0 || number_check [index_loc]> 5
+            elsif number_check[index_loc] < 0 || number_check [index_loc] > 5
                 return false
             elsif  number_check[index_loc + 1] == nil #Logic to catch the error of comparing a nil value.
                 break
@@ -79,7 +106,7 @@ class Board
                 return false
             elsif (letter_check[index_loc + 1].ord - letter_check[index_loc].ord) != 1 && (number_check[index_loc + 1] - number_check[index_loc]) != 1
                 return false
-            elsif (letter_check[index_loc+ 1].ord - letter_check[index_loc].ord) == 1 && (number_check[index_loc + 1] - number_check[index_loc]) == 1
+            elsif (letter_check[index_loc + 1].ord - letter_check[index_loc].ord) == 1 && (number_check[index_loc + 1] - number_check[index_loc]) == 1
                 return false
             end
         end
