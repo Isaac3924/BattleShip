@@ -115,10 +115,8 @@ class Game
             coord_array << third
 
             if @computer_board.valid_placement?(@computer_cruiser, coord_array) == false
-            #    require 'pry'; binding.pry
                 coord_array.clear
             elsif @computer_board.valid_placement?(@computer_cruiser, coord_array) == true
-                # require 'pry'; binding.pry
                 return coord_array
             end
         end
@@ -137,10 +135,8 @@ class Game
             coord_array << second
 
             if @computer_board.valid_placement?(@computer_sub, coord_array) == false
-            #    require 'pry'; binding.pry
                 coord_array.clear
             elsif @computer_board.valid_placement?(@computer_sub, coord_array) == true
-                # require 'pry'; binding.pry
                 return coord_array
             end
         end
@@ -163,18 +159,15 @@ class Game
             fire_input = gets.chomp.upcase
             
             until @computer_board.valid_coordinate?(fire_input) 
-                # require 'pry'; binding.pry
                 if player_check_array.include?(fire_input)
-                    # require 'pry'; binding.pry
                     puts "You've already fired at that location. Please enter a new coordinate:"
                     fire_input = gets.chomp.upcase
                 else
-                    # require 'pry'; binding.pry
+
                     puts "That was an invalid input, please enter a new corrdinate:"
                     fire_input = gets.chomp.upcase
                     
                     while player_check_array.include?(fire_input)
-                        # require 'pry'; binding.pry
                         puts "You've already fired at that location. Please enter a new coordinate:"
                         fire_input = gets.chomp.upcase
                     end
@@ -182,18 +175,14 @@ class Game
             end
 
             until player_check_array.include?(fire_input) == false
-                # require 'pry'; binding.pry
                 if @computer_board.valid_coordinate?(fire_input) == false
-                    # require 'pry'; binding.pry
                     puts "That was an invalid input, please enter a new corrdinate:"
                     fire_input = gets.chomp.upcase
                 else
-                    # require 'pry'; binding.pry
                     puts "You've already fired at that location. Please enter a new coordinate:"
                     fire_input = gets.chomp.upcase
                     
                     while @computer_board.valid_coordinate?(fire_input) == false
-                        # require 'pry'; binding.pry
                         puts "That was an invalid input, please enter a new corrdinate:"
                         fire_input = gets.chomp.upcase
                     end
