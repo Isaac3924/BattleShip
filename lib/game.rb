@@ -21,15 +21,31 @@ class Game
     
     def main_menu
         input = ""
-        puts "Welcome to BattleShip!"
+        puts "
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@.@@@@@@@@@@@@@ .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@ (@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@@@, %&@@@@@@@@(&.  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@%   .@@@@%@@ @.@    .#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@,@      @                    @@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@%@@@@@@@@                                     ,@  #*#   /, /. .       @
+        @%                                                                        @@@
+        @@                                                                     *@@@@@
+        ██████╗░░█████╗░████████╗████████╗██╗░░░░░███████╗░██████╗██╗░░██╗██╗██████╗░
+        ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║░░░░░██╔════╝██╔════╝██║░░██║██║██╔══██╗
+        ██████╦╝███████║░░░██║░░░░░░██║░░░██║░░░░░█████╗░░╚█████╗░███████║██║██████╔╝
+        ██╔══██╗██╔══██║░░░██║░░░░░░██║░░░██║░░░░░██╔══╝░░░╚═══██╗██╔══██║██║██╔═══╝░
+        ██████╦╝██║░░██║░░░██║░░░░░░██║░░░███████╗███████╗██████╔╝██║░░██║██║██║░░░░░
+        ╚═════╝░╚═╝░░╚═╝░░░╚═╝░░░░░░╚═╝░░░╚══════╝╚══════╝╚═════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░"
         puts "Enter 'p' to play, or enter 'q' to quit."
+        print "> "
         input = gets.chomp.downcase
 
         if input == "p" 
             puts "Setting up..."
             setup
         elsif input == "q"
-            puts "quitting the game, see you later!"
+            puts "Quitting the game, see you later!"
             exit
         else
             puts "That is an invalid input, please try again."
@@ -58,17 +74,24 @@ class Game
         puts "The Cruiser is 3 units long, and the Submarine is 2 units long."
         puts @player_board.render(true)
         puts "Enter the squares for the Cruiser (3 spaces):"
+        print "> "
         input1 = gets.chomp.upcase
+        print "> "
         input2 = gets.chomp.upcase
+        print "> "
         input3 = gets.chomp.upcase
         player_cruiser_coords = [input1, input2, input3]
 
         until @player_board.valid_placement?(@player_cruiser, player_cruiser_coords) == true
             if @player_board.valid_placement?(@player_cruiser, player_cruiser_coords) != true
                 puts "Those are invalid coordinates! Please try again:"
+                puts ""
+                print "> "
                 player_cruiser_coords.clear
                 input1 = gets.chomp.upcase
+                print "> "
                 input2 = gets.chomp.upcase
+                print "> "
                 input3 = gets.chomp.upcase
                 player_cruiser_coords = [input1, input2, input3]
             end
@@ -79,7 +102,9 @@ class Game
         puts @player_board.render(true)
         puts "Enter the squares for the Submarine (2 spaces):"
 
+        print "> "
         input4 = gets.chomp.upcase
+        print "> "
         input5 = gets.chomp.upcase
         player_sub_coords = [input4, input5]
 
@@ -87,7 +112,9 @@ class Game
             if @player_board.place(@player_sub, player_sub_coords) != true
                 puts "Those are invalid coordinates! Please try again:"
                 player_sub_coords.clear
+                print "> "
                 input4 = gets.chomp.upcase
+                print "> "
                 input5 = gets.chomp.upcase
                 player_sub_coords = [input4, input5]
             end
@@ -156,19 +183,23 @@ class Game
             puts @player_board.render(true)
             puts ""
             puts "Choose a coordinate to fire at:"
+            print "> "
             fire_input = gets.chomp.upcase
             
             until @computer_board.valid_coordinate?(fire_input) 
                 if player_check_array.include?(fire_input)
                     puts "You've already fired at that location. Please enter a new coordinate:"
+                    print "> "
                     fire_input = gets.chomp.upcase
                 else
 
                     puts "That was an invalid input, please enter a new corrdinate:"
+                    print "> "
                     fire_input = gets.chomp.upcase
-                    
+
                     while player_check_array.include?(fire_input)
                         puts "You've already fired at that location. Please enter a new coordinate:"
+                        print "> "
                         fire_input = gets.chomp.upcase
                     end
                 end  
@@ -177,13 +208,16 @@ class Game
             until player_check_array.include?(fire_input) == false
                 if @computer_board.valid_coordinate?(fire_input) == false
                     puts "That was an invalid input, please enter a new corrdinate:"
+                    print "> "
                     fire_input = gets.chomp.upcase
                 else
                     puts "You've already fired at that location. Please enter a new coordinate:"
+                    print "> "
                     fire_input = gets.chomp.upcase
                     
                     while @computer_board.valid_coordinate?(fire_input) == false
                         puts "That was an invalid input, please enter a new corrdinate:"
+                        print "> "
                         fire_input = gets.chomp.upcase
                     end
                 end
