@@ -21,19 +21,88 @@ class Game
     
     def main_menu
         input = ""
-        puts "Welcome to BattleShip!"
+        puts "
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@.@@@@@@@@@@@@@ .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@%@@@@@@@@@@@@@ (@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@@@, %&@@@@@@@@(&.  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@@@%   .@@@@%@@ @.@    .#@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@@@@@@@@@@@@@@@@@,@      @                    @@@@@@@@@@@@@@@@@@@@@@@@@@
+        @@@@@@%@@@@@@@@                                     ,@  #*#   /, /. .       @
+        @%                                                                        @@@
+        @@                                                                     *@@@@@
+        ██████╗░░█████╗░████████╗████████╗██╗░░░░░███████╗░██████╗██╗░░██╗██╗██████╗░
+        ██╔══██╗██╔══██╗╚══██╔══╝╚══██╔══╝██║░░░░░██╔════╝██╔════╝██║░░██║██║██╔══██╗
+        ██████╦╝███████║░░░██║░░░░░░██║░░░██║░░░░░█████╗░░╚█████╗░███████║██║██████╔╝
+        ██╔══██╗██╔══██║░░░██║░░░░░░██║░░░██║░░░░░██╔══╝░░░╚═══██╗██╔══██║██║██╔═══╝░
+        ██████╦╝██║░░██║░░░██║░░░░░░██║░░░███████╗███████╗██████╔╝██║░░██║██║██║░░░░░
+        ╚═════╝░╚═╝░░╚═╝░░░╚═╝░░░░░░╚═╝░░░╚══════╝╚══════╝╚═════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░"
         puts "Enter 'p' to play, or enter 'q' to quit."
+        print "> "
         input = gets.chomp.downcase
 
         if input == "p" 
             puts "Setting up..."
             setup
         elsif input == "q"
-            puts "quitting the game, see you later!"
+            puts "Quitting the game, see you later!"
             exit
         else
             puts "That is an invalid input, please try again."
         end
+    end
+
+    def place_cruiser
+        puts "Enter the squares for the Cruiser (3 spaces):"
+        print "> "
+        input1 = gets.chomp.upcase
+        print "> "
+        input2 = gets.chomp.upcase
+        print "> "
+        input3 = gets.chomp.upcase
+        player_cruiser_coords = [input1, input2, input3]
+
+        until @player_board.valid_placement?(@player_cruiser, player_cruiser_coords) == true
+            if @player_board.valid_placement?(@player_cruiser, player_cruiser_coords) != true
+                puts "Those are invalid coordinates! Please try again:"
+                puts ""
+                print "> "
+                player_cruiser_coords.clear
+                input1 = gets.chomp.upcase
+                print "> "
+                input2 = gets.chomp.upcase
+                print "> "
+                input3 = gets.chomp.upcase
+                player_cruiser_coords = [input1, input2, input3]
+            end
+        end
+        @player_board.place(@player_cruiser, player_cruiser_coords)
+
+        puts "You have placed your Cruiser at: #{player_cruiser_coords}!"
+    end
+
+    def place_sub
+        puts "Enter the squares for the Submarine (2 spaces):"
+
+        print "> "
+        input4 = gets.chomp.upcase
+        print "> "
+        input5 = gets.chomp.upcase
+        player_sub_coords = [input4, input5]
+
+        until @player_board.valid_placement?(@player_sub, player_sub_coords) == true
+            if @player_board.place(@player_sub, player_sub_coords) != true
+                puts "Those are invalid coordinates! Please try again:"
+                player_sub_coords.clear
+                print "> "
+                input4 = gets.chomp.upcase
+                print "> "
+                input5 = gets.chomp.upcase
+                player_sub_coords = [input4, input5]
+            end
+        end
+        @player_board.place(@player_sub, player_sub_coords)
+        puts "You have placed your Submarine at: #{player_sub_coords}!"
     end
 
     def setup
@@ -57,43 +126,14 @@ class Game
         puts "You now need to lay out your 2 ships."
         puts "The Cruiser is 3 units long, and the Submarine is 2 units long."
         puts @player_board.render(true)
-        puts "Enter the squares for the Cruiser (3 spaces):"
-        input1 = gets.chomp.upcase
-        input2 = gets.chomp.upcase
-        input3 = gets.chomp.upcase
-        player_cruiser_coords = [input1, input2, input3]
+        
+        place_cruiser
 
-        until @player_board.valid_placement?(@player_cruiser, player_cruiser_coords) == true
-            if @player_board.valid_placement?(@player_cruiser, player_cruiser_coords) != true
-                puts "Those are invalid coordinates! Please try again:"
-                player_cruiser_coords.clear
-                input1 = gets.chomp.upcase
-                input2 = gets.chomp.upcase
-                input3 = gets.chomp.upcase
-                player_cruiser_coords = [input1, input2, input3]
-            end
-        end
-        @player_board.place(@player_cruiser, player_cruiser_coords)
-        puts "You have placed your Cruiser at: #{player_cruiser_coords}!"
         puts ""
         puts @player_board.render(true)
-        puts "Enter the squares for the Submarine (2 spaces):"
+        
+        place_sub
 
-        input4 = gets.chomp.upcase
-        input5 = gets.chomp.upcase
-        player_sub_coords = [input4, input5]
-
-        until @player_board.valid_placement?(@player_sub, player_sub_coords) == true
-            if @player_board.place(@player_sub, player_sub_coords) != true
-                puts "Those are invalid coordinates! Please try again:"
-                player_sub_coords.clear
-                input4 = gets.chomp.upcase
-                input5 = gets.chomp.upcase
-                player_sub_coords = [input4, input5]
-            end
-        end
-        @player_board.place(@player_sub, player_sub_coords)
-        puts "You have placed your Submarine at: #{player_sub_coords}!"
         puts ""
         puts @player_board.render(true)
 
@@ -115,10 +155,8 @@ class Game
             coord_array << third
 
             if @computer_board.valid_placement?(@computer_cruiser, coord_array) == false
-            #    require 'pry'; binding.pry
                 coord_array.clear
             elsif @computer_board.valid_placement?(@computer_cruiser, coord_array) == true
-                # require 'pry'; binding.pry
                 return coord_array
             end
         end
@@ -137,10 +175,8 @@ class Game
             coord_array << second
 
             if @computer_board.valid_placement?(@computer_sub, coord_array) == false
-            #    require 'pry'; binding.pry
                 coord_array.clear
             elsif @computer_board.valid_placement?(@computer_sub, coord_array) == true
-                # require 'pry'; binding.pry
                 return coord_array
             end
         end
@@ -152,6 +188,49 @@ class Game
         game_over = false
         
         puts "THE GAME HAS STARTED"
+        game_loop(player_check_array, comp_check_array, game_over)
+    end
+
+    def check_valid(fire_input, player_check_array)
+        until @computer_board.valid_coordinate?(fire_input) 
+            if player_check_array.include?(fire_input)
+                puts "You've already fired at that location. Please enter a new coordinate:"
+                print "> "
+                fire_input = gets.chomp.upcase
+            else
+
+                puts "That was an invalid input, please enter a new corrdinate:"
+                print "> "
+                fire_input = gets.chomp.upcase
+
+                while player_check_array.include?(fire_input)
+                    puts "You've already fired at that location. Please enter a new coordinate:"
+                    print "> "
+                    fire_input = gets.chomp.upcase
+                end
+            end  
+        end
+
+        until player_check_array.include?(fire_input) == false
+            if @computer_board.valid_coordinate?(fire_input) == false
+                puts "That was an invalid input, please enter a new corrdinate:"
+                print "> "
+                fire_input = gets.chomp.upcase
+            else
+                puts "You've already fired at that location. Please enter a new coordinate:"
+                print "> "
+                fire_input = gets.chomp.upcase
+                
+                while @computer_board.valid_coordinate?(fire_input) == false
+                    puts "That was an invalid input, please enter a new corrdinate:"
+                    print "> "
+                    fire_input = gets.chomp.upcase
+                end
+            end
+        end
+    end
+
+    def game_loop(player_check_array, comp_check_array, game_over)
         until game_over == true
             puts ""
             puts "=============COMPUTER BOARD============="
@@ -160,46 +239,10 @@ class Game
             puts @player_board.render(true)
             puts ""
             puts "Choose a coordinate to fire at:"
+            print "> "
             fire_input = gets.chomp.upcase
             
-            until @computer_board.valid_coordinate?(fire_input) 
-                # require 'pry'; binding.pry
-                if player_check_array.include?(fire_input)
-                    # require 'pry'; binding.pry
-                    puts "You've already fired at that location. Please enter a new coordinate:"
-                    fire_input = gets.chomp.upcase
-                else
-                    # require 'pry'; binding.pry
-                    puts "That was an invalid input, please enter a new corrdinate:"
-                    fire_input = gets.chomp.upcase
-                    
-                    while player_check_array.include?(fire_input)
-                        # require 'pry'; binding.pry
-                        puts "You've already fired at that location. Please enter a new coordinate:"
-                        fire_input = gets.chomp.upcase
-                    end
-                end  
-            end
-
-            until player_check_array.include?(fire_input) == false
-                # require 'pry'; binding.pry
-                if @computer_board.valid_coordinate?(fire_input) == false
-                    # require 'pry'; binding.pry
-                    puts "That was an invalid input, please enter a new corrdinate:"
-                    fire_input = gets.chomp.upcase
-                else
-                    # require 'pry'; binding.pry
-                    puts "You've already fired at that location. Please enter a new coordinate:"
-                    fire_input = gets.chomp.upcase
-                    
-                    while @computer_board.valid_coordinate?(fire_input) == false
-                        # require 'pry'; binding.pry
-                        puts "That was an invalid input, please enter a new corrdinate:"
-                        fire_input = gets.chomp.upcase
-                    end
-                end
-            end
-
+            check_valid(fire_input, player_check_array)
 
             player_check_array << fire_input
 

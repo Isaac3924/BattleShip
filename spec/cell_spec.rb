@@ -51,10 +51,7 @@ RSpec.describe Cell do
 
         expect(cell_1.render).to eq(".")
 
-        #require "pry"; binding.pry
-
         cell_1.fire_upon
-        #require 'pry'; binding.pry
 
         expect(cell_1.render).to eq("M")
 
