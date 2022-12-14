@@ -258,6 +258,7 @@ class Game_Variable_Board
 
     def game_loop(player_check_array, comp_check_array, game_over)
 
+        comp_choices = @player_board.cells_hash.keys
         until game_over == true
             puts ""
             puts "=============COMPUTER BOARD============="
@@ -276,18 +277,12 @@ class Game_Variable_Board
             @computer_board.cells_hash[fire_input].fire_upon
             
             #COMPUTER FIRE LOGIC STARTS HERE
-            comp_fire_input = @player_board.cells_hash.keys.sample
+            comp_fire_input = ""
             
-            #WHY NO WOOOOOOORK
-            if comp_check_array.include?(comp_fire_input)
-                require 'pry'; binding.pry
-                until comp_check_array.include?(comp_fire_input) == false
-                    comp_fire_input = @player_board.cells_hash.keys.sample
-                    require 'pry'; binding.pry
-                end
-            end
-           
+            require 'pry'; binding.pry
             if comp_check_array != [] && @player_board.cells_hash[comp_check_array.last].render == "H"
+                comp_fire_input = comp_choices.sample
+                require 'pry'; binding.pry
                 @player_board.cells_hash.keys.each do |cell|
                     if cell.chars.length == 2
                         cell_number = cell.chars[1].to_i
@@ -307,26 +302,46 @@ class Game_Variable_Board
 
                     if cell.chars[0].ord - comp_check_array.last.chars[0].ord == -1 && cell_number == comp_number && @player_board.cells_hash[cell].render == "."
                         comp_fire_input = cell
+                        require 'pry'; binding.pry
                         @player_board.cells_hash[cell].fire_upon
+                        comp_choices.delete(cell)
                         break
                     elsif cell.chars[0].ord - comp_check_array.last.chars[0].ord == 1 && cell_number == comp_number && @player_board.cells_hash[cell].render == "."
                         comp_fire_input = cell
+                        require 'pry'; binding.pry
                         @player_board.cells_hash[cell].fire_upon
+                        comp_choices.delete(cell)
                         break
                     elsif cell.chars[0] == comp_check_array.last.chars[0] && cell_number - comp_number == -1 && @player_board.cells_hash[cell].render == "."
                         comp_fire_input = cell
+                        require 'pry'; binding.pry
                         @player_board.cells_hash[cell].fire_upon
+                        comp_choices.delete(cell)
                         break
                     elsif cell.chars[0] == comp_check_array.last.chars[0] && cell_number - comp_number == 1 && @player_board.cells_hash[cell].render == "."
                         comp_fire_input = cell
+                        require 'pry'; binding.pry
                         @player_board.cells_hash[cell].fire_upon
+                        comp_choices.delete(cell)
                         break
                     end
                     
                 end
-            else 
-                comp_fire_input = @player_board.cells_hash.keys.sample
+            elsif comp_check_array.include?(comp_fire_input)
+                require 'pry'; binding.pry
+                until comp_check_array.include?(comp_fire_input) == false
+                    require 'pry'; binding.pry
+                    comp_fire_input = comp_choices.sample
+                    require 'pry'; binding.pry
+                end
                 @player_board.cells_hash[comp_fire_input].fire_upon
+                comp_choices.delete(comp_fire_input)
+                require 'pry'; binding.pry
+            else 
+                comp_fire_input = comp_choices.sample
+                @player_board.cells_hash[comp_fire_input].fire_upon
+                comp_choices.delete(comp_fire_input)
+                require 'pry'; binding.pry
             end
             comp_check_array << comp_fire_input
 
