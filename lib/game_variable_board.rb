@@ -18,9 +18,8 @@ class Game_Variable_Board
         @player_cruiser = Ship.new('Cruiser', 3)
         @player_sub = Ship.new('Submarine', 2)
     end
-    
-    def main_menu
-        input = ""
+
+    def main_menu_message
         puts "
         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         @@@@@@@@@@@@@@@@@@@@@@@@@@@.@@@@@@@@@@@@@ .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -39,6 +38,13 @@ class Game_Variable_Board
         ╚═════╝░╚═╝░░╚═╝░░░╚═╝░░░░░░╚═╝░░░╚══════╝╚══════╝╚═════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░"
         puts "Enter 'p' to play, or enter 'q' to quit."
         print "> "
+    end
+    
+    def main_menu
+        input = ""
+
+        main_menu_message
+        
         input = gets.chomp.downcase
 
         if input == "p" 
@@ -256,6 +262,24 @@ class Game_Variable_Board
         end
     end
 
+    def turn_messages(fire_input, comp_fire_input)
+        if @computer_board.cells_hash[fire_input].render == "M"
+            puts "Your shot on #{fire_input} was a miss!"
+        elsif @computer_board.cells_hash[fire_input].render == "H"
+            puts "Your shot on #{fire_input} was a hit!"
+        elsif @computer_board.cells_hash[fire_input].render == "X"
+            puts "Your shot on #{fire_input} sunk my ship!"
+        end
+
+        if @player_board.cells_hash[comp_fire_input].render == "M"
+            puts "My shot on #{comp_fire_input} was a miss!"
+        elsif @player_board.cells_hash[comp_fire_input].render == "H"
+            puts "My shot on #{comp_fire_input} was a hit!"
+        elsif @player_board.cells_hash[comp_fire_input].render == "X"
+            puts "My shot on #{comp_fire_input} sunk your ship! MUHAHA!"
+        end 
+    end
+
     def game_loop(player_check_array, comp_check_array, game_over)
 
         comp_choices = @player_board.cells_hash.keys
@@ -279,10 +303,9 @@ class Game_Variable_Board
             #COMPUTER FIRE LOGIC STARTS HERE
             comp_fire_input = ""
             
-            require 'pry'; binding.pry
             if comp_check_array != [] && @player_board.cells_hash[comp_check_array.last].render == "H"
                 comp_fire_input = comp_choices.sample
-                require 'pry'; binding.pry
+
                 @player_board.cells_hash.keys.each do |cell|
                     if cell.chars.length == 2
                         cell_number = cell.chars[1].to_i
@@ -302,25 +325,25 @@ class Game_Variable_Board
 
                     if cell.chars[0].ord - comp_check_array.last.chars[0].ord == -1 && cell_number == comp_number && @player_board.cells_hash[cell].render == "."
                         comp_fire_input = cell
-                        require 'pry'; binding.pry
+        
                         @player_board.cells_hash[cell].fire_upon
                         comp_choices.delete(cell)
                         break
                     elsif cell.chars[0].ord - comp_check_array.last.chars[0].ord == 1 && cell_number == comp_number && @player_board.cells_hash[cell].render == "."
                         comp_fire_input = cell
-                        require 'pry'; binding.pry
+        
                         @player_board.cells_hash[cell].fire_upon
                         comp_choices.delete(cell)
                         break
                     elsif cell.chars[0] == comp_check_array.last.chars[0] && cell_number - comp_number == -1 && @player_board.cells_hash[cell].render == "."
                         comp_fire_input = cell
-                        require 'pry'; binding.pry
+        
                         @player_board.cells_hash[cell].fire_upon
                         comp_choices.delete(cell)
                         break
                     elsif cell.chars[0] == comp_check_array.last.chars[0] && cell_number - comp_number == 1 && @player_board.cells_hash[cell].render == "."
                         comp_fire_input = cell
-                        require 'pry'; binding.pry
+        
                         @player_board.cells_hash[cell].fire_upon
                         comp_choices.delete(cell)
                         break
@@ -328,38 +351,24 @@ class Game_Variable_Board
                     
                 end
             elsif comp_check_array.include?(comp_fire_input)
-                require 'pry'; binding.pry
+
                 until comp_check_array.include?(comp_fire_input) == false
-                    require 'pry'; binding.pry
+    
                     comp_fire_input = comp_choices.sample
-                    require 'pry'; binding.pry
+    
                 end
                 @player_board.cells_hash[comp_fire_input].fire_upon
                 comp_choices.delete(comp_fire_input)
-                require 'pry'; binding.pry
+
             else 
                 comp_fire_input = comp_choices.sample
                 @player_board.cells_hash[comp_fire_input].fire_upon
                 comp_choices.delete(comp_fire_input)
-                require 'pry'; binding.pry
+
             end
             comp_check_array << comp_fire_input
 
-            if @computer_board.cells_hash[fire_input].render == "M"
-                puts "Your shot on #{fire_input} was a miss!"
-            elsif @computer_board.cells_hash[fire_input].render == "H"
-                puts "Your shot on #{fire_input} was a hit!"
-            elsif @computer_board.cells_hash[fire_input].render == "X"
-                puts "Your shot on #{fire_input} sunk my ship!"
-            end
-
-            if @player_board.cells_hash[comp_fire_input].render == "M"
-                puts "My shot on #{comp_fire_input} was a miss!"
-            elsif @player_board.cells_hash[comp_fire_input].render == "H"
-                puts "My shot on #{comp_fire_input} was a hit!"
-            elsif @player_board.cells_hash[comp_fire_input].render == "X"
-                puts "My shot on #{comp_fire_input} sunk your ship! MUHAHA!"
-            end
+            turn_messages(fire_input, comp_fire_input)
 
             if @player_cruiser.sunk? && @player_sub.sunk?
                 game_over = true

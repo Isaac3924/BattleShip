@@ -19,8 +19,7 @@ class Game
         @player_sub = Ship.new('Submarine', 2)
     end
     
-    def main_menu
-        input = ""
+    def main_menu_message
         puts "
         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
         @@@@@@@@@@@@@@@@@@@@@@@@@@@.@@@@@@@@@@@@@ .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -39,16 +38,25 @@ class Game
         ╚═════╝░╚═╝░░╚═╝░░░╚═╝░░░░░░╚═╝░░░╚══════╝╚══════╝╚═════╝░╚═╝░░╚═╝╚═╝╚═╝░░░░░"
         puts "Enter 'p' to play, or enter 'q' to quit."
         print "> "
+    end
+
+    def main_menu
+        input = ""
+        main_menu_message
         input = gets.chomp.downcase
 
-        if input == "p" 
+        until input == "p" || input == "q" do
+            puts "That is an invalid input, please try again."
+            print ">"
+            input = gets.chomp.downcase
+        end
+        
+        if input == "p"
             puts "Setting up..."
             setup
         elsif input == "q"
             puts "Quitting the game, see you later!"
             exit
-        else
-            puts "That is an invalid input, please try again."
         end
     end
 
@@ -144,7 +152,6 @@ class Game
         letter_array = @computer_board.cells_hash.keys
         coord_array = []
         
-        
         until @computer_board.valid_placement?(@computer_sub, coord_array) == true
 
             first = letter_array.sample
@@ -228,13 +235,42 @@ class Game
                 end
             end
         end
+        return fire_input
+    end
+
+    def comp_check_valid(comp_fire_input, comp_check_array)
+        if comp_check_array.include?(comp_fire_input)
+            until comp_check_array.include?(comp_fire_input) == false
+                return comp_fire_input = @player_board.cells_hash.keys.sample
+            end
+        else
+            return comp_fire_input
+        end
+    end
+
+    def turn_messages(fire_input, comp_fire_input)
+        if @computer_board.cells_hash[fire_input].render == "M"
+            puts "Your shot on #{fire_input} was a miss!"
+        elsif @computer_board.cells_hash[fire_input].render == "H"
+            puts "Your shot on #{fire_input} was a hit!"
+        elsif @computer_board.cells_hash[fire_input].render == "X"
+            puts "Your shot on #{fire_input} sunk my ship!"
+        end
+
+        if @player_board.cells_hash[comp_fire_input].render == "M"
+            puts "My shot on #{comp_fire_input} was a miss!"
+        elsif @player_board.cells_hash[comp_fire_input].render == "H"
+            puts "My shot on #{comp_fire_input} was a hit!"
+        elsif @player_board.cells_hash[comp_fire_input].render == "X"
+            puts "My shot on #{comp_fire_input} sunk your ship! MUHAHA!"
+        end
     end
 
     def game_loop(player_check_array, comp_check_array, game_over)
         until game_over == true
             puts ""
             puts "=============COMPUTER BOARD============="
-            puts @computer_board.render(nil)
+            puts @computer_board.render(false)
             puts "==============PLAYER BOARD=============="
             puts @player_board.render(true)
             puts ""
@@ -242,7 +278,7 @@ class Game
             print "> "
             fire_input = gets.chomp.upcase
             
-            check_valid(fire_input, player_check_array)
+            fire_input = check_valid(fire_input, player_check_array)
 
             player_check_array << fire_input
 
@@ -250,31 +286,13 @@ class Game
             
             comp_fire_input = @player_board.cells_hash.keys.sample
             
-            if comp_check_array.include?(comp_fire_input)
-                until comp_check_array.include?(comp_fire_input) == false
-                    comp_fire_input = @player_board.cells_hash.keys.sample
-                end
-            end
+            comp_fire_input = comp_check_valid(comp_fire_input, comp_check_array)
 
             comp_check_array << comp_fire_input
 
             @player_board.cells_hash[comp_fire_input].fire_upon
 
-            if @computer_board.cells_hash[fire_input].render == "M"
-                puts "Your shot on #{fire_input} was a miss!"
-            elsif @computer_board.cells_hash[fire_input].render == "H"
-                puts "Your shot on #{fire_input} was a hit!"
-            elsif @computer_board.cells_hash[fire_input].render == "X"
-                puts "Your shot on #{fire_input} sunk my ship!"
-            end
-
-            if @player_board.cells_hash[comp_fire_input].render == "M"
-                puts "My shot on #{comp_fire_input} was a miss!"
-            elsif @player_board.cells_hash[comp_fire_input].render == "H"
-                puts "My shot on #{comp_fire_input} was a hit!"
-            elsif @player_board.cells_hash[comp_fire_input].render == "X"
-                puts "My shot on #{comp_fire_input} sunk your ship! MUHAHA!"
-            end
+            turn_messages(fire_input, comp_fire_input)
 
             if @player_cruiser.sunk? && @player_sub.sunk?
                 game_over = true

@@ -131,11 +131,19 @@ class Board
         end
     end
 
+    def render_message
+        "  1 2 3 4 \nA #{cells_hash["A1"].render} #{cells_hash["A2"].render} #{cells_hash["A3"].render} #{cells_hash["A4"].render} \nB #{cells_hash["B1"].render} #{cells_hash["B2"].render} #{cells_hash["B3"].render} #{cells_hash["B4"].render} \nC #{cells_hash["C1"].render} #{cells_hash["C2"].render} #{cells_hash["C3"].render} #{cells_hash["C4"].render} \nD #{cells_hash["D1"].render} #{cells_hash["D2"].render} #{cells_hash["D3"].render} #{cells_hash["D4"].render} \n"
+    end
+
+    def true_render_message
+        "  1 2 3 4 \nA #{check_for_s("A1")} #{check_for_s("A2")} #{check_for_s("A3")} #{check_for_s("A4")} \nB #{check_for_s("B1")} #{check_for_s("B2")} #{check_for_s("B3")} #{check_for_s("B4")} \nC #{check_for_s("C1")} #{check_for_s("C2")} #{check_for_s("C3")} #{check_for_s("C4")} \nD #{check_for_s("D1")} #{check_for_s("D2")} #{check_for_s("D3")} #{check_for_s("D4")} \n"
+    end
+
     def render(check)
-        if check == nil
-            return "  1 2 3 4 \nA #{cells_hash["A1"].render} #{cells_hash["A2"].render} #{cells_hash["A3"].render} #{cells_hash["A4"].render} \nB #{cells_hash["B1"].render} #{cells_hash["B2"].render} #{cells_hash["B3"].render} #{cells_hash["B4"].render} \nC #{cells_hash["C1"].render} #{cells_hash["C2"].render} #{cells_hash["C3"].render} #{cells_hash["C4"].render} \nD #{cells_hash["D1"].render} #{cells_hash["D2"].render} #{cells_hash["D3"].render} #{cells_hash["D4"].render} \n"
+        if check == false
+            return render_message
         elsif check == true
-            return "  1 2 3 4 \nA #{check_for_s("A1")} #{check_for_s("A2")} #{check_for_s("A3")} #{check_for_s("A4")} \nB #{check_for_s("B1")} #{check_for_s("B2")} #{check_for_s("B3")} #{check_for_s("B4")} \nC #{check_for_s("C1")} #{check_for_s("C2")} #{check_for_s("C3")} #{check_for_s("C4")} \nD #{check_for_s("D1")} #{check_for_s("D2")} #{check_for_s("D3")} #{check_for_s("D4")} \n"
+            return true_render_message
         end
     end
 end
