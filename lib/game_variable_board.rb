@@ -47,13 +47,18 @@ class Game_Variable_Board
         
         input = gets.chomp.downcase
 
-        if input == "p" 
+        until input == "p" || input == "q" do
+            puts "That is an invalid input, please try again."
+            print ">"
+            input = gets.chomp.downcase
+        end
+        
+        if input == "p"
+            puts "Setting up..."
             setup
         elsif input == "q"
             puts "Quitting the game, see you later!"
             exit
-        else
-            puts "That is an invalid input, please try again."
         end
     end
 
@@ -119,7 +124,7 @@ class Game_Variable_Board
         @player_cruiser = Ship.new('Cruiser', 3)
         @player_sub = Ship.new('Submarine', 2)
 
-        puts "Please input a number value between 0 and 999 for the width of the board:"
+        puts "Please input a number value between 1 and 999 for the width of the board:"
         print "> "
         width = gets.chomp.to_i
 
@@ -260,6 +265,7 @@ class Game_Variable_Board
                 end
             end
         end
+        return fire_input
     end
 
     def turn_messages(fire_input, comp_fire_input)
@@ -294,7 +300,7 @@ class Game_Variable_Board
             print "> "
             fire_input = gets.chomp.upcase
             
-            check_valid(fire_input, player_check_array)
+            fire_input = check_valid(fire_input, player_check_array)
 
             player_check_array << fire_input
 
