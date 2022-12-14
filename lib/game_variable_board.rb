@@ -1,15 +1,15 @@
 require './lib/ship'
 require './lib/cell'
-require './lib/board'
+require './lib/board_variable'
 
-class Game
+class Game_Variable_Board
     attr_reader :player_board,
                 :computer_board,
                 :computer_cruiser,
                 :computer_sub,
                 :player_cruiser,
                 :player_sub
-                
+
     def initialize
         @player_board = {}
         @computer_board = {}
@@ -42,7 +42,6 @@ class Game
         input = gets.chomp.downcase
 
         if input == "p" 
-            puts "Setting up..."
             setup
         elsif input == "q"
             puts "Quitting the game, see you later!"
@@ -106,20 +105,47 @@ class Game
     end
 
     def setup
+        width = 0
+        height = ""
         @computer_cruiser = Ship.new('Cruiser', 3)
         @computer_sub = Ship.new('Submarine', 2)
         
         @player_cruiser = Ship.new('Cruiser', 3)
         @player_sub = Ship.new('Submarine', 2)
 
-        @computer_board = Board.new
+        puts "Please input a number value between 0 and 999 for the width of the board:"
+        print "> "
+        width = gets.chomp.to_i
+
+        until width > 0 && width <= 999
+            puts "That is not a valid number! Please try again:"
+            puts ""
+            print "> "
+            width = gets.chomp.to_i
+        end
+        puts "Your board is #{width} units wide."
+
+        puts "Please input a max letter between A and Z for the height of the board:"
+        print "> "
+        height = gets.chomp.upcase
+
+        until height.chars.length == 1
+            puts "That is too many letters! Please try again:"
+            puts ""
+            print "> "
+            height = gets.chomp.upcase
+        end
+        puts "Your board goes down to #{height}"
+        puts "Setting up..."
+
+        @computer_board = Variable_Board.new(width, height)
         @computer_board.cells
 
         
         @computer_board.place(@computer_cruiser, computer_cruiser_coords)
         @computer_board.place(@computer_sub, computer_sub_coords)
 
-        @player_board = Board.new
+        @player_board = Variable_Board.new(width, height)
         @player_board.cells
 
         puts "I have laid out my ships on the grid."
@@ -231,10 +257,11 @@ class Game
     end
 
     def game_loop(player_check_array, comp_check_array, game_over)
+
         until game_over == true
             puts ""
             puts "=============COMPUTER BOARD============="
-            puts @computer_board.render(nil)
+            puts @computer_board.render(false)
             puts "==============PLAYER BOARD=============="
             puts @player_board.render(true)
             puts ""
@@ -248,17 +275,60 @@ class Game
 
             @computer_board.cells_hash[fire_input].fire_upon
             
+            #COMPUTER FIRE LOGIC STARTS HERE
             comp_fire_input = @player_board.cells_hash.keys.sample
             
+            #WHY NO WOOOOOOORK
             if comp_check_array.include?(comp_fire_input)
+                require 'pry'; binding.pry
                 until comp_check_array.include?(comp_fire_input) == false
                     comp_fire_input = @player_board.cells_hash.keys.sample
+                    require 'pry'; binding.pry
                 end
             end
+           
+            if comp_check_array != [] && @player_board.cells_hash[comp_check_array.last].render == "H"
+                @player_board.cells_hash.keys.each do |cell|
+                    if cell.chars.length == 2
+                        cell_number = cell.chars[1].to_i
+                    elsif cell.chars.length == 3
+                        cell_number =  "#{cell.chars[1]}#{cell.chars[2]}".to_i
+                    elsif cell.chars.length == 4
+                        cell_number =  "#{cell.chars[1]}#{cell.chars[2]}#{cell.chars[3]}".to_i
+                    end
 
+                    if comp_check_array.last.chars.length == 2
+                        comp_number = comp_check_array.last.chars[1].to_i
+                    elsif comp_check_array.last.chars.length == 3
+                        comp_number =  "#{comp_check_array.last.chars[1]}#{comp_check_array.last.chars[2]}".to_i
+                    elsif comp_check_array.last.chars.length == 4
+                        comp_number =  "#{comp_check_array.last.chars[1]}#{comp_check_array.last.chars[2]}#{comp_check_array.last.chars[3]}".to_i
+                    end
+
+                    if cell.chars[0].ord - comp_check_array.last.chars[0].ord == -1 && cell_number == comp_number && @player_board.cells_hash[cell].render == "."
+                        comp_fire_input = cell
+                        @player_board.cells_hash[cell].fire_upon
+                        break
+                    elsif cell.chars[0].ord - comp_check_array.last.chars[0].ord == 1 && cell_number == comp_number && @player_board.cells_hash[cell].render == "."
+                        comp_fire_input = cell
+                        @player_board.cells_hash[cell].fire_upon
+                        break
+                    elsif cell.chars[0] == comp_check_array.last.chars[0] && cell_number - comp_number == -1 && @player_board.cells_hash[cell].render == "."
+                        comp_fire_input = cell
+                        @player_board.cells_hash[cell].fire_upon
+                        break
+                    elsif cell.chars[0] == comp_check_array.last.chars[0] && cell_number - comp_number == 1 && @player_board.cells_hash[cell].render == "."
+                        comp_fire_input = cell
+                        @player_board.cells_hash[cell].fire_upon
+                        break
+                    end
+                    
+                end
+            else 
+                comp_fire_input = @player_board.cells_hash.keys.sample
+                @player_board.cells_hash[comp_fire_input].fire_upon
+            end
             comp_check_array << comp_fire_input
-
-            @player_board.cells_hash[comp_fire_input].fire_upon
 
             if @computer_board.cells_hash[fire_input].render == "M"
                 puts "Your shot on #{fire_input} was a miss!"
